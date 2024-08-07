@@ -13,3 +13,7 @@ body {
   justify-content: center;
   align-items: center;
 }
+
+.react-flow__controls-button{
+    color: red !important;
+}

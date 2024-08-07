@@ -3,6 +3,8 @@ import icon from '../../assets/icon.svg';
 import './App.css';
 import { useState } from 'react';
 import PouchDB from "pouchdb";
+import { ReactFlow, Background, Controls } from '@xyflow/react';
+import '@xyflow/react/dist/style.css';
 
 function Home() {
     const [dbName, setDbName] = useState();
@@ -32,6 +34,13 @@ function Home() {
        </form>
        
        {notification && <p>{notification}</p>}
+
+       <div style={{ height: '500px', width: "500px" }}>
+            <ReactFlow>
+                <Background />
+                <Controls />
+            </ReactFlow>
+        </div>
     </div>
   );
 }
