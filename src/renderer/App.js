@@ -8,10 +8,11 @@ import '@xyflow/react/dist/style.css';
 
 function Home() {
     const [dbName, setDbName] = useState();
+    const [nodeName, setNodeName] = useState();
     const [notification, setNotification] = useState();
    
-    function createDatabase(e){
-        e.preventDefault();
+    function createDatabase(){
+    
         console.log("WORKING")
         const db = new PouchDB(dbName);
         setNotification(`Database "${dbName}" Created Successfully`);
@@ -23,25 +24,56 @@ function Home() {
         setDbName(e.target.value);
     };
 
+    function handleNewNodeName(e){
+        setNodeName(e.target.value);
+    }
+
+    function addNode(){
+        const doc = {
+            "_id": new Date(),
+            "data": nodeName
+        };
+        
+        const db = new PouchDB("crimson")
+        try{
+            db.put(doc);
+        }catch(err){
+           console.log(err);
+        }
+
+        db.info().then(info =>  setNotification(JSON.stringify(info)));
+        setNodeName("");
+    }
+
   return (
     <div>
       
       <h1>Ideation App</h1>
-       <form>
+        {!notification && <div>
             <label htmlFor="dbName">Database name: </label>
-            <input id="dbName" type='text' onChange={updateData}></input>
+            <input id="dbName" type='text' value={dbName} onChange={updateData}></input>
             <button name="dbName" onClick={createDatabase}>Create</button>
-       </form>
+        </div>}
        
-       {notification && <p>{notification}</p>}
+        {notification && <p>{notification}</p>}
+        
+        <div>
+            <label htmlFor="addNode">Add a node: </label>
+            <input type="text" id="addNode" value={nodeName} onChange={handleNewNodeName}></input>
+            <button name="" onClick={addNode}>Add</button>
+        </div>
 
-       <div style={{ height: '500px', width: "500px" }}>
+        <div style={{ height: '500px', width: "500px" }}>
             <ReactFlow>
                 <Background />
                 <Controls />
             </ReactFlow>
         </div>
+
+        <p>END</p>
+
     </div>
+
   );
 }
 
