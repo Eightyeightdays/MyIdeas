@@ -1,5 +1,4 @@
 import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
-import icon from '../../assets/icon.svg';
 import './App.css';
 import { useEffect, useState } from 'react';
 import PouchDB from "pouchdb";
@@ -14,11 +13,7 @@ function Home() {
     const [allDocs, setAllDocs] = useState();
     const [nodeData, setNodeData] = useState();
     const db = new PouchDB(DB_NAME);
-    const nodes = [];
-    
-
-
-  
+    const nodes = [];  
   
     useEffect(()=>{
         const getDocs = async()=>{    
@@ -27,33 +22,6 @@ function Home() {
             // } catch (err) {
             //     console.log(err);
             // }
-            // try{
-            //     const res = await db.bulkDocs([ 
-            //         {
-            //             id: '1',
-            //             data: { label: 'Hello' },
-            //             position: { x: 0, y: 0 },
-            //         },
-            //         {
-            //             id: '2',
-            //             data: { label: 'World' },
-            //             position: { x: 100, y: 100 },
-            //         },
-            //         {
-            //             id: '3',
-            //             data: { label: 'Goodbye' },
-            //             position: { x: 200, y: 200 },
-            //         },
-            //         {
-            //             id: '3',
-            //             data: { label: 'Planet Earth' },
-            //             position: { x: 300, y: 300 },
-            //         },
-            //     ]);
-            // }catch(err){
-            //     console.log(err);
-            // }
-
             try{               
                 const result = await db.allDocs({
                     include_docs: true
@@ -75,12 +43,42 @@ function Home() {
         };
         
         getDocs();
-    }, [db]);
+    }, []);
+
+    async function addStartingDocs(){
+        try{
+            const res = await db.bulkDocs([ 
+                {
+                    id: '1',
+                    data: { label: 'Hello' },
+                    position: { x: 0, y: 0 },
+                },
+                {
+                    id: '2',
+                    data: { label: 'World' },
+                    position: { x: 100, y: 100 },
+                },
+                {
+                    id: '3',
+                    data: { label: 'Goodbye' },
+                    position: { x: 200, y: 200 },
+                },
+                {
+                    id: '4',
+                    data: { label: 'Planet Earth' },
+                    position: { x: 300, y: 300 },
+                },
+            ]);
+            console.log("Starting docs added");
+        }catch(err){
+            console.log(err);
+        }
+    }
 
   return (
     <div>
       <h1>Ideation App</h1>
-
+        <button onClick={addStartingDocs}>Add Starting Docs</button>
         {nodes && <div style={{ height: '500px', width: "500px" }}>
             <ReactFlow nodes={nodeData}>
                 <Background />
