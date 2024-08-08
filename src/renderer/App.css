@@ -8,12 +8,16 @@ body {
   height: 100vh;
   background: #1151a4;
   font-family: sans-serif;
-  overflow-y: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 2rem;
 }
 
 .react-flow__controls-button{
     color: red !important;
+}
+
+.react-flow__node{
+    color: black !important;
 }
