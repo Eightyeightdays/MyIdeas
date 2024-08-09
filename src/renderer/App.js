@@ -36,24 +36,28 @@ function Home() {
         },
     ];
 
-    // const getDocs = async()=>{    
-    //     try{               
-    //         const result = await db.allDocs({
-    //             include_docs: true
-    //         });
+    const getDocs = async()=>{    
+        try{               
+            const result = await db.allDocs({
+                include_docs: true
+            });
             
-    //         const docs = await result.rows.map(row => {
-    //             row.doc.id = row.doc._id;
-    //             delete row.doc._rev;
-    //             delete row.doc._id;
-    //             return row.doc;
-    //         });
-    //         setNodeData(docs);            
-    //     }catch(err){
-    //         console.log(err);
-    //     };
-    // };
+            const docs = await result.rows.map(row => {
+                row.doc.id = row.doc._id;
+                delete row.doc._rev;
+                delete row.doc._id;
+                return row.doc;
+            });
+            setNodeData(docs);            
+        }catch(err){
+            console.log(err);
+        };
+    };
 
+    useEffect(()=>{
+        getDocs();
+    }, [])
+    
     async function addStartingDocs(){
         try{
             const db = new PouchDB(DB_NAME);
@@ -88,7 +92,7 @@ function Home() {
         </div>}
     </div>
   );
-}
+};
 
 export default function App() {
   return (
@@ -98,4 +102,4 @@ export default function App() {
       </Routes>
     </Router>
   );
-}
+};
