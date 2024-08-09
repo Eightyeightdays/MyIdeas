@@ -57,8 +57,8 @@ function Home() {
     useEffect(()=>{
         getDocs();
     }, [])
-    
-    async function addStartingDocs(){
+
+    const addStartingDocs = async()=>{
         try{
             const db = new PouchDB(DB_NAME);
             const res = await db.bulkDocs(data);
@@ -79,13 +79,26 @@ function Home() {
         };
     };
 
+    const handleClick = async(e)=>{
+        // bring up details and menu
+        const dataId = e.target.getAttribute("data-id");
+       
+        try {
+            const doc = await db.get(dataId);
+            console.log(doc);
+        } catch (err) {
+            console.log(err);
+        };
+  
+    }
+
   return (
     <div>
       <h1>Ideation App</h1>
         <button onClick={addStartingDocs}>Add Starting Docs</button>
         <button onClick={deleteDocs}>Delete Docs</button>
         {nodeData && <div style={{ height: '500px', width: "500px" }}>
-            <ReactFlow nodes={nodeData}>
+            <ReactFlow nodes={nodeData} onNodeClick={handleClick}>
                 <Background />
                 <Controls />
             </ReactFlow>

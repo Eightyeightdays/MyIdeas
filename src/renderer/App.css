@@ -21,3 +21,7 @@ body {
 .react-flow__node{
     color: black !important;
 }
+
+.react-flow__node:hover{
+    cursor: pointer !important;
+}
