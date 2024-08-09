@@ -16,12 +16,12 @@ function Home() {
     const data = [ 
         {
             id: '1',
-            data: { label: 'Hello' },
+            data: { label: 'Hello', details: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." },
             position: { x: 0, y: 0 },
         },
         {
             id: '2',
-            data: { label: 'World' },
+            data: { label: 'The Carbochrome Process' },
             position: { x: 100, y: 100 },
         },
         {
@@ -62,8 +62,9 @@ function Home() {
         try{
             const db = new PouchDB(DB_NAME);
             const res = await db.bulkDocs(data);
-            setNodeData(data);
+            getDocs();
             console.log("Starting docs added");
+            // console.log(res);
         }catch(err){
             console.log(err);
         };
@@ -82,6 +83,7 @@ function Home() {
     const handleClick = async(e)=>{
         // bring up details and menu
         const dataId = e.target.getAttribute("data-id");
+        console.log(dataId);
        
         try {
             const doc = await db.get(dataId);
