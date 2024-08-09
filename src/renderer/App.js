@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import PouchDB from "pouchdb";
 import { ReactFlow, Background, Controls } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
+import { createPortal } from 'react-dom';
 
 function Home() {
     const DB_NAME = "MYIDEAS";
@@ -12,6 +13,9 @@ function Home() {
     const [notification, setNotification] = useState();
     const [allDocs, setAllDocs] = useState();
     const [nodeData, setNodeData] = useState();
+    const [popup, setPopup] = useState(false);
+    const [nodeId, setNodeId] = useState();
+    const [nodeDetails, setNodeDetails] = useState();
     const db = new PouchDB(DB_NAME);
     const data = [ 
         {
@@ -81,30 +85,41 @@ function Home() {
     };
 
     const handleClick = async(e)=>{
-        // bring up details and menu
+        setPopup(!popup);
         const dataId = e.target.getAttribute("data-id");
         console.log(dataId);
        
         try {
             const doc = await db.get(dataId);
-            console.log(doc);
+            console.log(doc.data.label);
+            console.log(doc.data.details);
+            setNodeDetails(doc.data)
         } catch (err) {
             console.log(err);
         };
-  
     }
 
+    const PopupWindow = ()=>{
+        return(
+            <div className='popupWindow' onClick={()=> setPopup(false)}>
+                <h2>{nodeDetails?.label}</h2>
+                {nodeDetails?.details && <div className='popupDetails'>{nodeDetails.details}</div>}
+            </div>
+        );
+    };
+
   return (
-    <div>
+    <div className='mainContainer'>
       <h1>Ideation App</h1>
         <button onClick={addStartingDocs}>Add Starting Docs</button>
         <button onClick={deleteDocs}>Delete Docs</button>
-        {nodeData && <div style={{ height: '500px', width: "500px" }}>
+        {nodeData && <div className="flowContainer" style={{ height: '100%', width: "100%" }}>
             <ReactFlow nodes={nodeData} onNodeClick={handleClick}>
                 <Background />
                 <Controls />
             </ReactFlow>
         </div>}
+        {popup && createPortal(<PopupWindow />, document.body)}
     </div>
   );
 };

@@ -2,13 +2,17 @@
  * @NOTE: Prepend a `~` to css file paths that are in your node_modules
  *        See https://github.com/webpack-contrib/sass-loader#imports
  */
-body {
-  position: relative;
+.mainContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
   color: white;
-  height: 100vh;
+  height: 100%;
+  width: 100%;
   background: #1151a4;
   font-family: sans-serif;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   padding: 2rem;
@@ -24,4 +28,22 @@ body {
 
 .react-flow__node:hover{
     cursor: pointer !important;
+}
+
+.popupWindow{
+    width: 100%;
+    height: 100%;
+    background: palevioletred;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.popupWindow:hover{
+    cursor: pointer;
 }
