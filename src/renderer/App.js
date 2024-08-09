@@ -13,73 +13,74 @@ function Home() {
     const [allDocs, setAllDocs] = useState();
     const [nodeData, setNodeData] = useState();
     const db = new PouchDB(DB_NAME);
-    const nodes = [];  
-  
-    useEffect(()=>{
-        const getDocs = async()=>{    
-            // try {
-            //     await db.destroy();
-            // } catch (err) {
-            //     console.log(err);
-            // }
-            try{               
-                const result = await db.allDocs({
-                    include_docs: true
-                });
-                
-                const docs = result.rows.map(row => {
-                    row.doc.id = row.doc._id;
-                    delete row.doc._rev;
-                    delete row.doc._id;
-                    return row.doc;
-                });
+    const data = [ 
+        {
+            id: '1',
+            data: { label: 'Hello' },
+            position: { x: 0, y: 0 },
+        },
+        {
+            id: '2',
+            data: { label: 'World' },
+            position: { x: 100, y: 100 },
+        },
+        {
+            id: '3',
+            data: { label: 'Goodbye' },
+            position: { x: 200, y: 200 },
+        },
+        {
+            id: '4',
+            data: { label: 'Planet Earth' },
+            position: { x: 300, y: 300 },
+        },
+    ];
 
-                setNodeData(docs);
-
-                console.log(nodeData);
-            }catch(err){
-                console.log(err);
-            };
-        };
-        
-        getDocs();
-    }, []);
+    // const getDocs = async()=>{    
+    //     try{               
+    //         const result = await db.allDocs({
+    //             include_docs: true
+    //         });
+            
+    //         const docs = await result.rows.map(row => {
+    //             row.doc.id = row.doc._id;
+    //             delete row.doc._rev;
+    //             delete row.doc._id;
+    //             return row.doc;
+    //         });
+    //         setNodeData(docs);            
+    //     }catch(err){
+    //         console.log(err);
+    //     };
+    // };
 
     async function addStartingDocs(){
         try{
-            const res = await db.bulkDocs([ 
-                {
-                    id: '1',
-                    data: { label: 'Hello' },
-                    position: { x: 0, y: 0 },
-                },
-                {
-                    id: '2',
-                    data: { label: 'World' },
-                    position: { x: 100, y: 100 },
-                },
-                {
-                    id: '3',
-                    data: { label: 'Goodbye' },
-                    position: { x: 200, y: 200 },
-                },
-                {
-                    id: '4',
-                    data: { label: 'Planet Earth' },
-                    position: { x: 300, y: 300 },
-                },
-            ]);
+            const db = new PouchDB(DB_NAME);
+            const res = await db.bulkDocs(data);
+            setNodeData(data);
             console.log("Starting docs added");
         }catch(err){
             console.log(err);
-        }
-    }
+        };
+    };
+    
+    const deleteDocs = async()=>{
+        try {
+            await db.destroy();
+            console.log("Starting docs deleted");
+            setNodeData([]);
+        } catch (err) {
+            console.log(err);
+        };
+    };
 
   return (
     <div>
       <h1>Ideation App</h1>
         <button onClick={addStartingDocs}>Add Starting Docs</button>
-        {nodes && <div style={{ height: '500px', width: "500px" }}>
+        <button onClick={deleteDocs}>Delete Docs</button>
+        {nodeData && <div style={{ height: '500px', width: "500px" }}>
             <ReactFlow nodes={nodeData}>
                 <Background />
                 <Controls />
