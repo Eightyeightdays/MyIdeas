@@ -16,6 +16,7 @@ function Home() {
     const [popup, setPopup] = useState(false);
     const [nodeId, setNodeId] = useState();
     const [nodeDetails, setNodeDetails] = useState();
+    const [sourceNode, setSourceNode] = useState();
     // const [edges, setEdges] = useState();
     const db = new PouchDB(DB_NAME);
     const data = [ 
@@ -92,17 +93,45 @@ function Home() {
     const handleClick = async(e)=>{
         setPopup(!popup);
         const dataId = e.target.getAttribute("data-id");
+        setSourceNode(dataId);
         console.log(e.target.id)
         console.log(dataId);
        
         try {
             const doc = await db.get(dataId);
             console.log(doc.data.label);
-            console.log(doc.data.details);
+            console.log(`Node details: ${doc.data.details}`);
             setNodeDetails(doc.data)
         } catch (err) {
             console.log(err);
         };
+    };
+
+    const addNewNode = async (e) =>{
+        const newNode = {
+            _id: 'ANYOLDIRON',
+            data: { label: 'This all just might be futile' },
+            position: { x: 500, y: 300 }, // dynamic position TODO
+        };
+
+        try{
+            await db.put(newNode);
+        }catch(err){
+            console.log(err);
+        }
+
+        const newEdge = {
+            type: "smoothstep", 
+            source: sourceNode, 
+            target: "ANYOLDIRON", // TODO
+            id: "RANDOM", 
+            label: "AUTO EDGE", 
+            style: { stroke: "black", strokeWidth: 5 }
+        };
+        
+        getDocs();
+        edges.push(newEdge);
+        console.log(edges);
     }
 
     const PopupWindow = ()=>{
@@ -110,6 +139,7 @@ function Home() {
             <div className='popupWindow' onClick={()=> setPopup(false)}>
                 <h2>{nodeDetails?.label}</h2>
                 {nodeDetails?.details && <div className='popupDetails'>{nodeDetails.details}</div>}
+                <button className='addNewNodeButton' onClick={addNewNode}>Add new node</button>
             </div>
         );
     };
