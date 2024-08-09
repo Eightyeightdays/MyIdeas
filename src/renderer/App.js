@@ -16,29 +16,34 @@ function Home() {
     const [popup, setPopup] = useState(false);
     const [nodeId, setNodeId] = useState();
     const [nodeDetails, setNodeDetails] = useState();
+    // const [edges, setEdges] = useState();
     const db = new PouchDB(DB_NAME);
     const data = [ 
         {
-            id: '1',
+            _id: '1',
             data: { label: 'Hello', details: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." },
             position: { x: 0, y: 0 },
         },
         {
-            id: '2',
+            _id: '2',
             data: { label: 'The Carbochrome Process' },
             position: { x: 100, y: 100 },
         },
         {
-            id: '3',
+            _id: '3',
             data: { label: 'Goodbye' },
             position: { x: 200, y: 200 },
         },
         {
-            id: '4',
+            _id: '4',
             data: { label: 'Planet Earth' },
             position: { x: 300, y: 300 },
         },
     ];
+
+    const edges = [
+        {type: "smoothstep", source: "1", target: "4", id: "First-edge", label: "TEST", style: { stroke: "black", strokeWidth: 5 }}
+    ]
 
     const getDocs = async()=>{    
         try{               
@@ -87,6 +92,7 @@ function Home() {
     const handleClick = async(e)=>{
         setPopup(!popup);
         const dataId = e.target.getAttribute("data-id");
+        console.log(e.target.id)
         console.log(dataId);
        
         try {
@@ -114,7 +120,7 @@ function Home() {
         <button onClick={addStartingDocs}>Add Starting Docs</button>
         <button onClick={deleteDocs}>Delete Docs</button>
         {nodeData && <div className="flowContainer" style={{ height: '100%', width: "100%" }}>
-            <ReactFlow nodes={nodeData} onNodeClick={handleClick}>
+            <ReactFlow nodes={nodeData} edges={edges} onNodeClick={handleClick}>
                 <Background />
                 <Controls />
             </ReactFlow>
